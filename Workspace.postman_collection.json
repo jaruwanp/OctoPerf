@@ -142,8 +142,8 @@
 							"//var workspace_id = responseData[1].id;",
 							"//console.log(workspace_id);",
 							"",
-							"postman.setEnvironmentVariable(\"workspaceId\", responseData[1].id);",
-							"postman.setEnvironmentVariable(\"userId\", responseData[1].userId);",
+							"//postman.setEnvironmentVariable(\"workspaceId\", responseData[1].id);",
+							"postman.setEnvironmentVariable(\"userId\", responseData[0].userId);",
 							"",
 							"var moment = require('moment');",
 							"pm.environment.set('currentdate', moment().format((\"YYYY-MM-DD HH:mm:ss\")));",
@@ -254,7 +254,7 @@
 							"var jsonData = JSON.parse(responseBody);",
 							"console.log(jsonData);",
 							"",
-							"postman.setEnvironmentVariable(\"new_workspaceId\", jsonData.id);",
+							"postman.setEnvironmentVariable(\"workspaceId\", jsonData.id);",
 							"console.log(jsonData.Id);"
 						],
 						"type": "text/javascript"
@@ -334,7 +334,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"id\": \"\",\n  \"userId\": \"{{userId}}\",\n  \"name\": \"New workspace II {{currentdate}}\",\n  \"description\": \"Checkng Account Description\",\n  \"created\": \"2022-11-09T04:48:29.894Z\",\n  \"lastModified\": \"2022-11-09T04:48:29.894Z\"\n}",
+					"raw": "{\n  \"id\": \"\",\n  \"userId\": \"{{userId}}\",\n  \"name\": \"My new Workspace : {{currentdate}}\",\n  \"description\": \"Checkng Account Description\",\n  \"created\": \"2022-11-09T04:48:29.894Z\",\n  \"lastModified\": \"2022-11-09T04:48:29.894Z\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -444,7 +444,7 @@
 					}
 				],
 				"url": {
-					"raw": "https://api.octoperf.com/workspaces/members/by-workspace/{{new_workspaceId}}/by-usernames",
+					"raw": "https://api.octoperf.com/workspaces/members/by-workspace/{{workspaceId}}/by-usernames",
 					"protocol": "https",
 					"host": [
 						"api",
@@ -455,7 +455,7 @@
 						"workspaces",
 						"members",
 						"by-workspace",
-						"{{new_workspaceId}}",
+						"{{workspaceId}}",
 						"by-usernames"
 					]
 				}
@@ -464,6 +464,19 @@
 		},
 		{
 			"name": "updateWorkspace",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 for [ updateWorkspace ]\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -545,10 +558,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"created\": 1667969309894,\n    \"description\": \"update workspace || will be deleted soon {{currentdate}}\",\n    \"id\": \"{{new_workspaceId}}\",\n    \"lastModified\": 1668352774149,\n    \"name\": \"updated workspace || will be deleted: {{currentdate}}\",\n    \"userId\": \"{{userId}}\"\n}"
+					"raw": "{\n    \"created\": 1667969309894,\n    \"description\": \"@Update my new workspace || will be deleted soon {{currentdate}}\",\n    \"id\": \"{{workspaceId}}\",\n    \"lastModified\": 1668352774149,\n    \"name\": \"@Update my new workspace || will be deleted: {{currentdate}}\",\n    \"userId\": \"{{userId}}\"\n}"
 				},
 				"url": {
-					"raw": "https://api.octoperf.com/workspaces/{{new_workspaceId}}",
+					"raw": "https://api.octoperf.com/workspaces/{{workspaceId}}",
 					"protocol": "https",
 					"host": [
 						"api",
@@ -557,171 +570,7 @@
 					],
 					"path": [
 						"workspaces",
-						"{{new_workspaceId}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "deleteNewWorkspace",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 204 for [ deleteNewWorkspace ]\", function () {",
-							"    pm.response.to.have.status(204);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [
-					{
-						"key": "accept",
-						"value": "*/*"
-					},
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJvY3RvcGVyZiIsImlkIjoiNHhVYVI0UUJlSVlsMEdfWVJ6c0UiLCJleHAiOjE2NjgwNjc3MTksImlhdCI6MTY2Nzk4MTMxOSwiaGFzaCI6IjI5YjFhZGUzYTIzNDFmMWUzNjEzYTdiM2FmYzJiNTUyIn0.SnVwPvjIGH5VNYb5UrztHx4ZS-mImTjr8KtzREpbtss",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "pm.test(\"Status code is 200 for [ deleteNewWorkspace ]\", function () {\n    pm.response.to.have.status(204);\n});\n"
-				},
-				"url": {
-					"raw": "https://api.octoperf.com/workspaces/{{new_workspaceId}}",
-					"protocol": "https",
-					"host": [
-						"api",
-						"octoperf",
-						"com"
-					],
-					"path": [
-						"workspaces",
-						"{{new_workspaceId}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "getProjectList",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200 for [ getWorkspaceProjects ]\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "authority",
-						"value": "api.octoperf.com"
-					},
-					{
-						"key": "accept",
-						"value": "application/json, text/plain, */*"
-					},
-					{
-						"key": "accept-language",
-						"value": "en-US,en;q=0.9,th;q=0.8"
-					},
-					{
-						"key": "authorization",
-						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJvY3RvcGVyZiIsImlkIjoiNHhVYVI0UUJlSVlsMEdfWVJ6c0UiLCJleHAiOjE2NjgwNTMzMzksImlhdCI6MTY2Nzk2NjkzOSwiaGFzaCI6IjI5YjFhZGUzYTIzNDFmMWUzNjEzYTdiM2FmYzJiNTUyIn0.mUIqs6uSMkDwbF2WObs72qwGXTI6HIvOJxQgiVRaWIE",
-						"disabled": true
-					},
-					{
-						"key": "cookie",
-						"value": "_ga=GA1.2.2009056722.1667546287; __stripe_mid=747b210c-b54d-40c0-8247-dcf9fee11fd7e4dbff; slaask-token-5a5eed8e193aa4456766852b0d3bdd64=fd03hqprjpm58rvv79ezoi44zj1m69do9gqr34ebp5eh; _gid=GA1.2.1253455578.1667858061; __stripe_sid=4ce91426-f316-4fe0-8884-1f9b7044f70d354ec5"
-					},
-					{
-						"key": "dnt",
-						"value": "1"
-					},
-					{
-						"key": "referer",
-						"value": "https://api.octoperf.com/app/"
-					},
-					{
-						"key": "sec-ch-ua",
-						"value": "\"Google Chrome\";v=\"107\", \"Chromium\";v=\"107\", \"Not=A?Brand\";v=\"24\""
-					},
-					{
-						"key": "sec-ch-ua-mobile",
-						"value": "?1"
-					},
-					{
-						"key": "sec-ch-ua-platform",
-						"value": "\"Android\""
-					},
-					{
-						"key": "sec-fetch-dest",
-						"value": "empty"
-					},
-					{
-						"key": "sec-fetch-mode",
-						"value": "cors"
-					},
-					{
-						"key": "sec-fetch-site",
-						"value": "same-origin"
-					},
-					{
-						"key": "user-agent",
-						"value": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Mobile Safari/537.36"
-					}
-				],
-				"url": {
-					"raw": "https://api.octoperf.com/design/projects/by-workspace/{{workspaceId}}/DESIGN",
-					"protocol": "https",
-					"host": [
-						"api",
-						"octoperf",
-						"com"
-					],
-					"path": [
-						"design",
-						"projects",
-						"by-workspace",
-						"{{workspaceId}}",
-						"DESIGN"
+						"{{workspaceId}}"
 					]
 				}
 			},
@@ -833,7 +682,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": \"\",\n    \"created\": \"2022-11-10T08:30:21.288Z\",\n    \"lastModified\": \"2022-11-10T08:30:21.288Z\",\n    \"userId\": \"{{userId}}\",\n    \"workspaceId\": \"{{workspaceId}}\",\n    \"name\": \"SpaceX-API Proj : {{currentdate}}\",\n    \"description\": \"SpaceX-API Proj  Desc - {{currentdate}}\",\n    \"type\": \"DESIGN\",\n    \"tags\": []\n}"
+					"raw": "{\n    \"id\": \"\",\n    \"created\": \"2022-11-10T08:30:21.288Z\",\n    \"lastModified\": \"2022-11-10T08:30:21.288Z\",\n    \"userId\": \"{{userId}}\",\n    \"workspaceId\": \"{{workspaceId}}\",\n    \"name\": \"@New Project : {{currentdate}}\",\n    \"description\": \"Proj  Desc - {{currentdate}}\",\n    \"type\": \"DESIGN\",\n    \"tags\": []\n}"
 				},
 				"url": {
 					"raw": "https://api.octoperf.com/design/projects?workspaceId={{workspaceId}}",
@@ -852,6 +701,112 @@
 							"key": "workspaceId",
 							"value": "{{workspaceId}}"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getProjectList",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 for [ getWorkspaceProjects ]\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "authority",
+						"value": "api.octoperf.com"
+					},
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "accept-language",
+						"value": "en-US,en;q=0.9,th;q=0.8"
+					},
+					{
+						"key": "authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJvY3RvcGVyZiIsImlkIjoiNHhVYVI0UUJlSVlsMEdfWVJ6c0UiLCJleHAiOjE2NjgwNTMzMzksImlhdCI6MTY2Nzk2NjkzOSwiaGFzaCI6IjI5YjFhZGUzYTIzNDFmMWUzNjEzYTdiM2FmYzJiNTUyIn0.mUIqs6uSMkDwbF2WObs72qwGXTI6HIvOJxQgiVRaWIE",
+						"disabled": true
+					},
+					{
+						"key": "cookie",
+						"value": "_ga=GA1.2.2009056722.1667546287; __stripe_mid=747b210c-b54d-40c0-8247-dcf9fee11fd7e4dbff; slaask-token-5a5eed8e193aa4456766852b0d3bdd64=fd03hqprjpm58rvv79ezoi44zj1m69do9gqr34ebp5eh; _gid=GA1.2.1253455578.1667858061; __stripe_sid=4ce91426-f316-4fe0-8884-1f9b7044f70d354ec5"
+					},
+					{
+						"key": "dnt",
+						"value": "1"
+					},
+					{
+						"key": "referer",
+						"value": "https://api.octoperf.com/app/"
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\"Google Chrome\";v=\"107\", \"Chromium\";v=\"107\", \"Not=A?Brand\";v=\"24\""
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?1"
+					},
+					{
+						"key": "sec-ch-ua-platform",
+						"value": "\"Android\""
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-origin"
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Mobile Safari/537.36"
+					}
+				],
+				"url": {
+					"raw": "https://api.octoperf.com/design/projects/by-workspace/{{workspaceId}}/DESIGN",
+					"protocol": "https",
+					"host": [
+						"api",
+						"octoperf",
+						"com"
+					],
+					"path": [
+						"design",
+						"projects",
+						"by-workspace",
+						"{{workspaceId}}",
+						"DESIGN"
 					]
 				}
 			},
@@ -1008,7 +963,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"created\": 1668128560046,\n    \"description\": \"desc {{currentdate}}\",\n    \"id\": \"{{projectId}}\",\n    \"lastModified\": 1668128660898,\n    \"name\": \"Project - {{currentdate}}\",\n    \"tags\": [],\n    \"type\": \"DESIGN\",\n    \"userId\": \"{{userId}}\",\n    \"workspaceId\": \"{{workspaceId}}\"\n}"
+					"raw": "{\n    \"created\": 1668128560046,\n    \"description\": \"desc {{currentdate}}\",\n    \"id\": \"{{projectId}}\",\n    \"lastModified\": 1668128660898,\n    \"name\": \"Updated @Project - {{currentdate}}\",\n    \"tags\": [],\n    \"type\": \"DESIGN\",\n    \"userId\": \"{{userId}}\",\n    \"workspaceId\": \"{{workspaceId}}\"\n}"
 				},
 				"url": {
 					"raw": "https://api.octoperf.com/design/projects/{{projectId}}",
@@ -1077,6 +1032,64 @@
 						"design",
 						"projects",
 						"{{projectId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteNewWorkspace",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204 for [ deleteNewWorkspace ]\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "accept",
+						"value": "*/*"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJvY3RvcGVyZiIsImlkIjoiNHhVYVI0UUJlSVlsMEdfWVJ6c0UiLCJleHAiOjE2NjgwNjc3MTksImlhdCI6MTY2Nzk4MTMxOSwiaGFzaCI6IjI5YjFhZGUzYTIzNDFmMWUzNjEzYTdiM2FmYzJiNTUyIn0.SnVwPvjIGH5VNYb5UrztHx4ZS-mImTjr8KtzREpbtss",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "pm.test(\"Status code is 200 for [ deleteNewWorkspace ]\", function () {\n    pm.response.to.have.status(204);\n});\n"
+				},
+				"url": {
+					"raw": "https://api.octoperf.com/workspaces/{{workspaceId}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"octoperf",
+						"com"
+					],
+					"path": [
+						"workspaces",
+						"{{workspaceId}}"
 					]
 				}
 			},
